@@ -50,18 +50,39 @@ function CreateProjectPage() {
         setError('');
         setLoading(true);
 
+        // Client-side validation
+        const milestoneSum = formData.milestones.reduce((sum, m) => sum + (parseFloat(m.amount) || 0), 0);
+        if (formData.budget && Math.abs(milestoneSum - parseFloat(formData.budget)) > 0.01) {
+            setError(`Milestone amounts (${milestoneSum.toFixed(3)} ETH) must equal the total budget (${formData.budget} ETH)`);
+            setLoading(false);
+            return;
+        }
+
         try {
+            const token = localStorage.getItem('token');
             const response = await axios.post(`${API_URL}/projects`, {
                 title: formData.title,
                 description: formData.description,
                 category: formData.category,
-                budget: formData.budget,
-                milestones: formData.milestones
+                budget: parseFloat(formData.budget),
+                milestones: formData.milestones.map(m => ({
+                    title: m.title,
+                    amount: parseFloat(m.amount)
+                }))
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
             });
 
             navigate('/dashboard');
         } catch (err) {
-            setError(err.response?.data?.error || 'Failed to create project');
+            const errorData = err.response?.data;
+            if (errorData?.errors) {
+                setError(errorData.errors.map(e => e.msg || e.message).join('. '));
+            } else {
+                setError(errorData?.error || 'Failed to create project. Please try again.');
+            }
         } finally {
             setLoading(false);
         }

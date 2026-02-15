@@ -19,7 +19,7 @@ import './Dashboard.css';
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 function Dashboard() {
-    const { user, logout } = useAuth();
+    const { user, logout, linkWallet } = useAuth();
     const { account, connectWallet, isConnected } = useWeb3();
     const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -41,10 +41,22 @@ function Dashboard() {
     };
 
     const handleWalletConnect = async () => {
-        const result = await connectWallet();
-        if (result.success && user) {
-            // Link wallet to user account
-            // This would call the linkWallet from AuthContext
+        try {
+            const result = await connectWallet();
+            if (result.success && result.account) {
+                // Link wallet to user account in the backend
+                const linkResult = await linkWallet(result.account);
+                if (linkResult.success) {
+                    alert('Wallet connected and linked successfully!');
+                } else {
+                    alert('Wallet connected but linking failed: ' + (linkResult.error || 'Unknown error'));
+                }
+            } else if (!result.success) {
+                alert(result.error || 'Failed to connect wallet');
+            }
+        } catch (error) {
+            console.error('Wallet connection error:', error);
+            alert('Failed to connect wallet: ' + error.message);
         }
     };
 
