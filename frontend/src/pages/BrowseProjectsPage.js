@@ -1,20 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../contexts/AuthContext';
+import {
+    LockIcon,
+    SearchIcon,
+    BriefcaseIcon,
+    EthereumIcon,
+    UserIcon,
+    GridIcon
+} from '../components/Icons';
 import './BrowseProjectsPage.css';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 function BrowseProjectsPage() {
     const { user } = useAuth();
+    const navigate = useNavigate();
     const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [filter, setFilter] = useState('all');
+    const [filter, setFilter] = useState('All');
+    const [search, setSearch] = useState('');
+    const [proposalModal, setProposalModal] = useState(null);
+    const [proposalData, setProposalData] = useState({ coverLetter: '', proposedTimeline: '' });
+    const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
         loadProjects();
-    }, [filter]);
+    }, []);
 
     const loadProjects = async () => {
         try {
@@ -29,28 +42,86 @@ function BrowseProjectsPage() {
 
     const categories = ['All', 'Web Development', 'Mobile Apps', 'Design', 'Writing', 'Marketing'];
 
+    const filteredProjects = projects.filter(project => {
+        const matchesCategory = filter === 'All' || project.category === filter;
+        const matchesSearch = !search ||
+            project.title?.toLowerCase().includes(search.toLowerCase()) ||
+            project.description?.toLowerCase().includes(search.toLowerCase());
+        return matchesCategory && matchesSearch;
+    });
+
+    const handleSubmitProposal = async (e) => {
+        e.preventDefault();
+        if (!proposalModal) return;
+
+        setSubmitting(true);
+        try {
+            const token = localStorage.getItem('token');
+            await axios.post(`${API_URL}/proposals`, {
+                projectId: proposalModal._id,
+                coverLetter: proposalData.coverLetter,
+                proposedTimeline: proposalData.proposedTimeline
+            }, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            alert('✅ Proposal submitted successfully!');
+            setProposalModal(null);
+            setProposalData({ coverLetter: '', proposedTimeline: '' });
+        } catch (err) {
+            const msg = err.response?.data?.error || err.response?.data?.errors?.[0]?.msg || 'Failed to submit proposal';
+            alert('❌ ' + msg);
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
     return (
-        <div className="browse-projects-page">
-            {/* Header */}
-            <nav className="navbar">
-                <div className="container navbar-content">
+        <div className="browse-page">
+            {/* Navigation */}
+            <nav className="dashboard-nav">
+                <div className="container dashboard-nav-content">
                     <Link to="/" className="logo">
-                        <h2>🔒 Escrow Platform</h2>
+                        <div className="logo-icon">
+                            <LockIcon className="icon" />
+                        </div>
+                        <h2>GigsNearYou</h2>
                     </Link>
                     <div className="nav-actions">
-                        <Link to="/dashboard" className="btn btn-outline">Dashboard</Link>
+                        <button onClick={() => navigate('/dashboard')} className="btn btn-outline">
+                            ← Dashboard
+                        </button>
                     </div>
                 </div>
             </nav>
 
-            <div className="container">
-                <div className="page-header">
-                    <h1>Browse Available Projects</h1>
-                    <p>Find exciting freelance opportunities</p>
+            {/* Page Header */}
+            <div className="page-header">
+                <div className="container page-header-content">
+                    <div className="page-title">
+                        <div className="page-title-icon">
+                            <BriefcaseIcon />
+                        </div>
+                        <div>
+                            <h1>Browse Available Projects</h1>
+                            <p>Find exciting freelance opportunities</p>
+                        </div>
+                    </div>
                 </div>
+            </div>
 
-                {/* Filters */}
+            <div className="container" style={{ paddingTop: '32px', paddingBottom: '60px' }}>
+                {/* Search and Filters */}
                 <div className="filters-section">
+                    <div className="search-box">
+                        <SearchIcon />
+                        <input
+                            type="text"
+                            placeholder="Search projects by title or description..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
+                    </div>
                     <div className="category-filters">
                         {categories.map((cat) => (
                             <button
@@ -67,47 +138,112 @@ function BrowseProjectsPage() {
                 {/* Projects Grid */}
                 {loading ? (
                     <div className="loading-state">
-                        <div className="loading"></div>
-                        <p>Loading projects...</p>
+                        <div className="loading loading-lg"></div>
                     </div>
-                ) : projects.length === 0 ? (
-                    <div className="empty-state card">
-                        <h3>No projects available yet</h3>
-                        <p>Check back soon for new opportunities!</p>
+                ) : filteredProjects.length === 0 ? (
+                    <div className="empty-state">
+                        <div className="empty-state-icon">
+                            <BriefcaseIcon />
+                        </div>
+                        <h3>No projects found</h3>
+                        <p>{filter !== 'All' ? `No ${filter} projects available. Try a different category.` : 'Check back soon for new opportunities!'}</p>
                     </div>
                 ) : (
                     <div className="projects-grid">
-                        {projects.map((project) => (
-                            <div key={project._id} className="project-card card">
-                                <div className="project-card-header">
-                                    <h3>{project.title}</h3>
-                                    <span className="badge badge-success">{project.status}</span>
-                                </div>
-                                <p className="project-description">{project.description}</p>
-                                <div className="project-meta">
-                                    <div className="meta-item">
-                                        <strong>Budget:</strong> {project.budget} ETH
+                        {filteredProjects.map((project) => (
+                            <div key={project._id} className="project-card">
+                                <div className="project-card-top">
+                                    <div className="project-card-header">
+                                        <h3>{project.title}</h3>
+                                        <span className="badge badge-success">{project.status}</span>
                                     </div>
+                                    <p className="project-card-description">{project.description}</p>
                                     {project.category && (
-                                        <div className="meta-item">
-                                            <strong>Category:</strong> {project.category}
-                                        </div>
+                                        <span className="project-category">{project.category}</span>
                                     )}
-                                    <div className="meta-item">
-                                        <strong>Client:</strong> {project.client?.name || 'Anonymous'}
+                                </div>
+
+                                <div className="project-card-meta">
+                                    <div className="project-budget">
+                                        <EthereumIcon className="icon-sm" style={{ WebkitTextFillColor: 'initial' }} />
+                                        {project.budget} ETH
+                                    </div>
+                                    <div className="project-client">
+                                        <UserIcon className="icon-sm" />
+                                        {project.client?.name || 'Anonymous'}
                                     </div>
                                 </div>
+
                                 <div className="project-actions">
-                                    <Link to={`/project/${project._id}`} className="btn btn-primary">
+                                    <button
+                                        onClick={() => navigate(`/project/${project._id}`)}
+                                        className="btn btn-primary"
+                                    >
                                         View Details
-                                    </Link>
-                                    <button className="btn btn-outline">Submit Proposal</button>
+                                    </button>
+                                    {user?.role?.toLowerCase() === 'freelancer' && (
+                                        <button
+                                            onClick={() => {
+                                                setProposalModal(project);
+                                                setProposalData({ coverLetter: '', proposedTimeline: '' });
+                                            }}
+                                            className="btn btn-outline"
+                                        >
+                                            Submit Proposal
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         ))}
                     </div>
                 )}
             </div>
+
+            {/* Proposal Modal */}
+            {proposalModal && (
+                <div className="modal-overlay" onClick={() => setProposalModal(null)}>
+                    <div className="modal-content card" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h2>Submit Proposal</h2>
+                            <button className="modal-close" onClick={() => setProposalModal(null)}>×</button>
+                        </div>
+                        <p className="modal-subtitle">For: <strong>{proposalModal.title}</strong></p>
+
+                        <form onSubmit={handleSubmitProposal}>
+                            <div className="form-group">
+                                <label className="form-label">Estimated Timeline</label>
+                                <input
+                                    type="text"
+                                    className="form-input"
+                                    value={proposalData.proposedTimeline}
+                                    onChange={(e) => setProposalData({ ...proposalData, proposedTimeline: e.target.value })}
+                                    placeholder="e.g. 2 weeks"
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">Cover Letter</label>
+                                <textarea
+                                    className="form-textarea"
+                                    value={proposalData.coverLetter}
+                                    onChange={(e) => setProposalData({ ...proposalData, coverLetter: e.target.value })}
+                                    rows="5"
+                                    placeholder="Why are you the best fit for this project? Describe your relevant experience..."
+                                    required
+                                />
+                            </div>
+
+                            <div className="modal-actions">
+                                <button type="button" className="btn btn-outline" onClick={() => setProposalModal(null)}>
+                                    Cancel
+                                </button>
+                                <button type="submit" className="btn btn-primary" disabled={submitting}>
+                                    {submitting ? 'Submitting...' : 'Submit Proposal'}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

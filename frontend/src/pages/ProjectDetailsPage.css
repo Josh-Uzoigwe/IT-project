@@ -4,7 +4,74 @@
     background-color: var(--bg-secondary);
     background-image: var(--gradient-mesh);
     background-attachment: fixed;
-    padding-bottom: 60px;
+}
+
+/* ===== Navigation ===== */
+.project-details-page .dashboard-nav {
+    background: var(--bg-glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: var(--shadow-md);
+    padding: 16px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.project-details-page .dashboard-nav-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.project-details-page .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: var(--text-primary);
+}
+
+.project-details-page .logo-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gradient-primary);
+    border-radius: var(--radius-md);
+    padding: 8px;
+    box-shadow: var(--shadow-glow-sm);
+}
+
+.project-details-page .logo-icon svg {
+    color: white;
+}
+
+.project-details-page .logo h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ===== Loading State ===== */
+.loading-full {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 120px 20px;
+    gap: 16px;
+}
+
+.loading-full p {
+    color: var(--text-secondary);
+    font-size: 15px;
 }
 
 /* ===== Project Header ===== */
@@ -27,7 +94,7 @@
     font-size: 32px;
     font-weight: 700;
     color: var(--text-primary);
-    margin-bottom: 12px;
+    margin: 0;
 }
 
 .project-meta {
@@ -62,7 +129,10 @@
     display: grid;
     grid-template-columns: 1fr 360px;
     gap: 32px;
-    margin-top: 32px;
+}
+
+.project-main {
+    min-width: 0;
 }
 
 /* ===== Main Content Cards ===== */
@@ -102,6 +172,7 @@
     color: var(--text-secondary);
     line-height: 1.8;
     font-size: 15px;
+    white-space: pre-wrap;
 }
 
 /* ===== Milestones Timeline ===== */
@@ -179,10 +250,6 @@
     min-height: 40px;
 }
 
-.milestone-timeline-item:last-child .milestone-line {
-    display: none;
-}
-
 .milestone-content {
     flex: 1;
     background: var(--bg-glass);
@@ -202,7 +269,6 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 12px;
     gap: 12px;
 }
 
@@ -221,16 +287,52 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-}
-
-.milestone-amount svg {
-    color: var(--primary-color);
+    white-space: nowrap;
 }
 
 .milestone-actions {
     display: flex;
     gap: 10px;
     margin-top: 16px;
+}
+
+/* ===== Proposals List ===== */
+.proposals-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.proposal-item {
+    background: var(--bg-glass);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    transition: all var(--transition-fast);
+}
+
+.proposal-item:hover {
+    border-color: var(--border-hover);
+    box-shadow: var(--shadow-md);
+}
+
+.proposal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.proposal-freelancer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.proposal-cover-letter {
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.7;
 }
 
 /* ===== Sidebar ===== */
@@ -290,10 +392,6 @@
     background-clip: text;
 }
 
-.budget-display-value svg {
-    color: var(--primary-color);
-}
-
 .budget-progress {
     margin-top: 20px;
 }
@@ -342,6 +440,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 
 .participant-avatar svg {
@@ -391,5 +490,23 @@
 
     .project-actions .btn {
         flex: 1;
+    }
+
+    .milestone-timeline-item {
+        gap: 12px;
+    }
+
+    .milestone-timeline-connector {
+        width: 32px;
+    }
+
+    .milestone-status-dot {
+        width: 32px;
+        height: 32px;
+    }
+
+    .milestone-status-dot svg {
+        width: 16px;
+        height: 16px;
     }
 }
