@@ -23,41 +23,63 @@ function Dashboard() {
     const { account, connectWallet, isConnected } = useWeb3();
     const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [walletConnecting, setWalletConnecting] = useState(false);
+    const [walletError, setWalletError] = useState('');
     const navigate = useNavigate();
 
+    // Normalize role for comparisons (case-insensitive)
+    const userRole = (user?.role || '').toLowerCase();
+    const isClient = userRole === 'client';
+    const isFreelancer = userRole === 'freelancer';
+
     useEffect(() => {
-        loadProjects();
+        if (user) {
+            loadProjects();
+        } else {
+            setLoading(false);
+        }
     }, [user]);
 
     const loadProjects = async () => {
         try {
             const response = await axios.get(`${API_URL}/projects?role=my-projects`);
-            setProjects(response.data.projects);
+            setProjects(response.data.projects || []);
         } catch (error) {
             console.error('Failed to load projects:', error);
+            setProjects([]);
         } finally {
             setLoading(false);
         }
     };
 
     const handleWalletConnect = async () => {
+        setWalletError('');
+        setWalletConnecting(true);
         try {
             const result = await connectWallet();
             if (result.success && result.account) {
                 // Link wallet to user account in the backend
                 const linkResult = await linkWallet(result.account);
-                if (linkResult.success) {
-                    alert('Wallet connected and linked successfully!');
-                } else {
-                    alert('Wallet connected but linking failed: ' + (linkResult.error || 'Unknown error'));
+                if (!linkResult.success) {
+                    setWalletError('Wallet connected but linking failed: ' + (linkResult.error || 'Unknown error'));
                 }
             } else if (!result.success) {
-                alert(result.error || 'Failed to connect wallet');
+                setWalletError(result.error || 'Failed to connect wallet');
             }
         } catch (error) {
             console.error('Wallet connection error:', error);
-            alert('Failed to connect wallet: ' + error.message);
+            setWalletError('Failed to connect wallet: ' + error.message);
+        } finally {
+            setWalletConnecting(false);
         }
+    };
+
+    const handleCreateProject = () => {
+        navigate('/create-project');
+    };
+
+    const handleBrowseProjects = () => {
+        navigate('/browse-projects');
     };
 
     const getStatusBadge = (status) => {
@@ -114,9 +136,14 @@ function Dashboard() {
                     ) : (
                         <div>
                             <p className="text-secondary">Connect your MetaMask wallet to interact with smart contracts</p>
-                            <button onClick={handleWalletConnect} className="btn btn-primary mt-2">
+                            {walletError && <p style={{ color: '#e74c3c', marginBottom: '8px', fontSize: '14px' }}>{walletError}</p>}
+                            <button
+                                onClick={handleWalletConnect}
+                                className="btn btn-primary mt-2"
+                                disabled={walletConnecting}
+                            >
                                 <WalletIcon className="icon-sm" />
-                                Connect Wallet
+                                {walletConnecting ? 'Connecting...' : 'Connect Wallet'}
                             </button>
                         </div>
                     )}
@@ -138,17 +165,17 @@ function Dashboard() {
                             <GridIcon className="icon" />
                             My Projects
                         </h2>
-                        {user?.role === 'Client' && (
-                            <Link to="/create-project" className="btn btn-primary">
+                        {isClient && (
+                            <button onClick={handleCreateProject} className="btn btn-primary">
                                 <PlusIcon className="icon-sm" />
                                 Create Project
-                            </Link>
+                            </button>
                         )}
-                        {user?.role === 'Freelancer' && (
-                            <Link to="/browse-projects" className="btn btn-primary">
+                        {isFreelancer && (
+                            <button onClick={handleBrowseProjects} className="btn btn-primary">
                                 <SearchIcon className="icon-sm" />
                                 Browse Projects
-                            </Link>
+                            </button>
                         )}
                     </div>
 
@@ -162,26 +189,27 @@ function Dashboard() {
                                 <BriefcaseIcon />
                             </div>
                             <p>No projects yet</p>
-                            {user?.role === 'Freelancer' && (
-                                <Link to="/browse-projects" className="btn btn-primary">
+                            {isFreelancer && (
+                                <button onClick={handleBrowseProjects} className="btn btn-primary">
                                     <SearchIcon className="icon-sm" />
                                     Find Projects
-                                </Link>
+                                </button>
                             )}
-                            {user?.role === 'Client' && (
-                                <Link to="/create-project" className="btn btn-primary">
+                            {isClient && (
+                                <button onClick={handleCreateProject} className="btn btn-primary">
                                     <PlusIcon className="icon-sm" />
                                     Create Your First Project
-                                </Link>
+                                </button>
                             )}
                         </div>
                     ) : (
                         <div className="projects-grid mt-3">
                             {projects.map((project) => (
-                                <Link
+                                <div
                                     key={project._id}
-                                    to={`/project/${project._id}`}
+                                    onClick={() => navigate(`/project/${project._id}`)}
                                     className="project-card"
+                                    style={{ cursor: 'pointer' }}
                                 >
                                     <div className="project-header">
                                         <h3>{project.title}</h3>
@@ -195,18 +223,18 @@ function Dashboard() {
                                             <EthereumIcon className="icon-sm" style={{ WebkitTextFillColor: 'initial' }} />
                                             {project.budget} ETH
                                         </span>
-                                        {user?.role === 'Client' && project.freelancer && (
+                                        {isClient && project.freelancer && (
                                             <span className="text-secondary">
                                                 Freelancer: {project.freelancer.name}
                                             </span>
                                         )}
-                                        {user?.role === 'Freelancer' && project.client && (
+                                        {isFreelancer && project.client && (
                                             <span className="text-secondary">
                                                 Client: {project.client.name}
                                             </span>
                                         )}
                                     </div>
-                                </Link>
+                                </div>
                             ))}
                         </div>
                     )}
