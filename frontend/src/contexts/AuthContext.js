@@ -97,7 +97,8 @@ export const AuthProvider = ({ children }) => {
                 walletAddress
             });
 
-            setUser(response.data.user);
+            // Merge the response with existing user data to preserve fields like role
+            setUser(prev => ({ ...prev, ...response.data.user }));
             return { success: true };
         } catch (error) {
             return {

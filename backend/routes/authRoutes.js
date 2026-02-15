@@ -155,6 +155,7 @@ router.post('/link-wallet', authMiddleware, [
                 id: user._id,
                 name: user.name,
                 email: user.email,
+                role: user.role,
                 walletAddress: user.walletAddress
             }
         });
