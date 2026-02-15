@@ -164,6 +164,11 @@ const sanitizeObject = (obj) => {
         return typeof obj === 'string' ? stripHtmlTags(obj) : obj;
     }
 
+    // Preserve arrays — iterate and sanitize each element
+    if (Array.isArray(obj)) {
+        return obj.map(item => sanitizeObject(item));
+    }
+
     const sanitized = {};
     for (const key in obj) {
         if (obj.hasOwnProperty(key)) {
