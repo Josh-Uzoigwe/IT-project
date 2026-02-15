@@ -1,0 +1,223 @@
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import axios from 'axios';
+import { useAuth } from '../contexts/AuthContext';
+import './CreateProjectPage.css';
+
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
+function CreateProjectPage() {
+    const { user } = useAuth();
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+
+    const [formData, setFormData] = useState({
+        title: '',
+        description: '',
+        category: 'Web Development',
+        budget: '',
+        milestones: [{ title: '', amount: '' }]
+    });
+
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
+    };
+
+    const handleMilestoneChange = (index, field, value) => {
+        const newMilestones = [...formData.milestones];
+        newMilestones[index][field] = value;
+        setFormData({ ...formData, milestones: newMilestones });
+    };
+
+    const addMilestone = () => {
+        setFormData({
+            ...formData,
+            milestones: [...formData.milestones, { title: '', amount: '' }]
+        });
+    };
+
+    const removeMilestone = (index) => {
+        const newMilestones = formData.milestones.filter((_, i) => i !== index);
+        setFormData({ ...formData, milestones: newMilestones });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+        setLoading(true);
+
+        try {
+            const response = await axios.post(`${API_URL}/projects`, {
+                title: formData.title,
+                description: formData.description,
+                category: formData.category,
+                budget: formData.budget,
+                milestones: formData.milestones
+            });
+
+            navigate('/dashboard');
+        } catch (err) {
+            setError(err.response?.data?.error || 'Failed to create project');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const totalMilestoneAmount = formData.milestones.reduce((sum, m) => sum + (parseFloat(m.amount) || 0), 0);
+
+    return (
+        <div className="create-project-page">
+            <nav className="navbar">
+                <div className="container navbar-content">
+                    <Link to="/" className="logo">
+                        <h2>🔒 Escrow Platform</h2>
+                    </Link>
+                    <div className="nav-actions">
+                        <Link to="/dashboard" className="btn btn-outline">← Back to Dashboard</Link>
+                    </div>
+                </div>
+            </nav>
+
+            <div className="container">
+                <div className="create-project-container">
+                    <div className="page-header">
+                        <h1>Create New Project</h1>
+                        <p>Post a project and receive proposals from talented freelancers</p>
+                    </div>
+
+                    {error && <div className="error-message">{error}</div>}
+
+                    <form onSubmit={handleSubmit} className="project-form card">
+                        <div className="form-group">
+                            <label className="form-label">Project Title*</label>
+                            <input
+                                type="text"
+                                name="title"
+                                className="form-input"
+                                value={formData.title}
+                                onChange={handleChange}
+                                required
+                                placeholder="e.g. Build a responsive landing page"
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label className="form-label">Description*</label>
+                            <textarea
+                                name="description"
+                                className="form-textarea"
+                                value={formData.description}
+                                onChange={handleChange}
+                                required
+                                rows="6"
+                                placeholder="Describe your project in detail..."
+                            />
+                        </div>
+
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label className="form-label">Category*</label>
+                                <select
+                                    name="category"
+                                    className="form-select"
+                                    value={formData.category}
+                                    onChange={handleChange}
+                                    required
+                                >
+                                    <option value="Web Development">Web Development</option>
+                                    <option value="Mobile Apps">Mobile Apps</option>
+                                    <option value="Design">Design</option>
+                                    <option value="Writing">Writing</option>
+                                    <option value="Marketing">Marketing</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+
+                            <div className="form-group">
+                                <label className="form-label">Total Budget (ETH)*</label>
+                                <input
+                                    type="number"
+                                    name="budget"
+                                    className="form-input"
+                                    value={formData.budget}
+                                    onChange={handleChange}
+                                    required
+                                    step="0.001"
+                                    min="0"
+                                    placeholder="e.g. 1.5"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="milestones-section">
+                            <div className="section-header">
+                                <h3>Project Milestones</h3>
+                                <button type="button" onClick={addMilestone} className="btn btn-outline btn-sm">
+                                    + Add Milestone
+                                </button>
+                            </div>
+
+                            {formData.milestones.map((milestone, index) => (
+                                <div key={index} className="milestone-item">
+                                    <div className="milestone-number">{index + 1}</div>
+                                    <div className="milestone-fields">
+                                        <div className="form-group">
+                                            <input
+                                                type="text"
+                                                className="form-input"
+                                                value={milestone.title}
+                                                onChange={(e) => handleMilestoneChange(index, 'title', e.target.value)}
+                                                placeholder="Milestone title"
+                                                required
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <input
+                                                type="number"
+                                                className="form-input"
+                                                value={milestone.amount}
+                                                onChange={(e) => handleMilestoneChange(index, 'amount', e.target.value)}
+                                                placeholder="Amount (ETH)"
+                                                step="0.001"
+                                                min="0"
+                                                required
+                                            />
+                                        </div>
+                                    </div>
+                                    {formData.milestones.length > 1 && (
+                                        <button
+                                            type="button"
+                                            onClick={() => removeMilestone(index)}
+                                            className="btn-remove"
+                                        >
+                                            ×
+                                        </button>
+                                    )}
+                                </div>
+                            ))}
+
+                            <div className="milestone-summary">
+                                <strong>Total Milestone Amount:</strong> {totalMilestoneAmount.toFixed(3)} ETH
+                                {formData.budget && totalMilestoneAmount !== parseFloat(formData.budget) && (
+                                    <span className="warning-text">
+                                        (Should equal budget: {formData.budget} ETH)
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+
+                        <button type="submit" className="btn btn-primary btn-large" disabled={loading}>
+                            {loading ? <span className="loading"></span> : 'Create Project'}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default CreateProjectPage;

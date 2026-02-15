@@ -1,0 +1,384 @@
+/* ===== Create Project Page ===== */
+.create-project-page {
+    min-height: 100vh;
+    background-color: var(--bg-secondary);
+    background-image: var(--gradient-mesh);
+    background-attachment: fixed;
+    padding-bottom: 60px;
+}
+
+/* ===== Form Container ===== */
+.create-project-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.create-project-card {
+    background: var(--bg-glass-strong);
+    backdrop-filter: blur(24px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: 48px 40px;
+    box-shadow: var(--shadow-lg);
+}
+
+/* ===== Form Header ===== */
+.create-project-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.create-project-header-icon {
+    width: 72px;
+    height: 72px;
+    background: var(--gradient-primary);
+    border-radius: var(--radius-xl);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    box-shadow: var(--shadow-glow);
+}
+
+.create-project-header-icon svg {
+    width: 36px;
+    height: 36px;
+    color: white;
+}
+
+.create-project-header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--text-primary);
+}
+
+.create-project-header p {
+    color: var(--text-secondary);
+    font-size: 16px;
+}
+
+/* ===== Form Sections ===== */
+.form-section {
+    margin-bottom: 36px;
+    padding-bottom: 36px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.form-section:last-of-type {
+    border-bottom: none;
+    margin-bottom: 24px;
+    padding-bottom: 0;
+}
+
+.form-section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 24px;
+}
+
+.form-section-title svg {
+    color: var(--primary-color);
+}
+
+/* ===== Form Groups ===== */
+.create-project-form .form-group {
+    margin-bottom: 24px;
+}
+
+.create-project-form .form-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.create-project-form .form-label svg {
+    color: var(--primary-color);
+    width: 18px;
+    height: 18px;
+}
+
+.create-project-form .form-input,
+.create-project-form .form-textarea,
+.create-project-form .form-select {
+    width: 100%;
+    padding: 14px 18px;
+    font-size: 15px;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--bg-glass);
+    color: var(--text-primary);
+    transition: all var(--transition-fast);
+}
+
+.create-project-form .form-input:focus,
+.create-project-form .form-textarea:focus,
+.create-project-form .form-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px var(--primary-glow);
+}
+
+.create-project-form .form-textarea {
+    min-height: 140px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+.form-hint {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.form-hint svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* ===== Budget Input ===== */
+.budget-input-wrapper {
+    position: relative;
+}
+
+.budget-input-wrapper .currency-symbol {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.budget-input-wrapper .currency-symbol svg {
+    width: 18px;
+    height: 18px;
+    color: var(--primary-color);
+}
+
+.budget-input-wrapper input {
+    padding-left: 65px;
+}
+
+/* ===== Milestones Section ===== */
+.milestones-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.milestone-item {
+    background: var(--bg-glass);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    position: relative;
+    transition: all var(--transition-fast);
+}
+
+.milestone-item:hover {
+    border-color: var(--border-hover);
+}
+
+.milestone-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.milestone-number {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.milestone-number span {
+    width: 28px;
+    height: 28px;
+    background: var(--gradient-primary);
+    color: white;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+.remove-milestone-btn {
+    background: none;
+    border: none;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.remove-milestone-btn:hover {
+    color: var(--danger-color);
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.remove-milestone-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+.milestone-fields {
+    display: grid;
+    grid-template-columns: 1fr 150px;
+    gap: 16px;
+}
+
+.milestone-fields .form-group {
+    margin-bottom: 0;
+}
+
+.add-milestone-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 14px;
+    border: 2px dashed var(--border-color);
+    border-radius: var(--radius-lg);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.add-milestone-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    background: rgba(124, 58, 237, 0.05);
+}
+
+.add-milestone-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* ===== Budget Summary ===== */
+.budget-summary {
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.budget-summary-label {
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.budget-summary-value {
+    font-size: 24px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.budget-summary-value svg {
+    color: var(--primary-color);
+}
+
+/* ===== Submit Button ===== */
+.form-actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 32px;
+}
+
+.form-actions .btn {
+    flex: 1;
+    padding: 16px;
+    font-size: 16px;
+}
+
+/* ===== Error/Success Messages ===== */
+.form-error {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: var(--radius-md);
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--danger-color);
+    font-size: 14px;
+}
+
+.form-error svg {
+    flex-shrink: 0;
+}
+
+.form-success {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: var(--radius-md);
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--success-color);
+    font-size: 14px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    .create-project-card {
+        padding: 32px 24px;
+    }
+
+    .create-project-header h1 {
+        font-size: 26px;
+    }
+
+    .milestone-fields {
+        grid-template-columns: 1fr;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .budget-summary {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+    }
+}

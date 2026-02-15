@@ -1,0 +1,395 @@
+/* ===== Project Details Page ===== */
+.project-details-page {
+    min-height: 100vh;
+    background-color: var(--bg-secondary);
+    background-image: var(--gradient-mesh);
+    background-attachment: fixed;
+    padding-bottom: 60px;
+}
+
+/* ===== Project Header ===== */
+.project-header-section {
+    background: var(--bg-glass);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-color);
+    padding: 32px 0;
+}
+
+.project-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.project-title-area h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+}
+
+.project-meta {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.project-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.project-meta-item svg {
+    width: 18px;
+    height: 18px;
+    color: var(--text-tertiary);
+}
+
+.project-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* ===== Project Content Grid ===== */
+.project-content {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 32px;
+    margin-top: 32px;
+}
+
+/* ===== Main Content Cards ===== */
+.project-section {
+    background: var(--bg-glass);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: 28px;
+    margin-bottom: 24px;
+}
+
+.project-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.project-section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.project-section-title svg {
+    color: var(--primary-color);
+}
+
+/* ===== Description Section ===== */
+.project-description {
+    color: var(--text-secondary);
+    line-height: 1.8;
+    font-size: 15px;
+}
+
+/* ===== Milestones Timeline ===== */
+.milestones-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.milestone-timeline-item {
+    display: flex;
+    gap: 20px;
+    position: relative;
+}
+
+.milestone-timeline-connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 40px;
+    flex-shrink: 0;
+}
+
+.milestone-status-dot {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-tertiary);
+    border: 2px solid var(--border-color);
+    z-index: 1;
+    transition: all var(--transition-fast);
+}
+
+.milestone-status-dot svg {
+    width: 20px;
+    height: 20px;
+    color: var(--text-tertiary);
+}
+
+.milestone-status-dot.completed {
+    background: var(--success-color);
+    border-color: var(--success-color);
+}
+
+.milestone-status-dot.completed svg {
+    color: white;
+}
+
+.milestone-status-dot.active {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-glow-sm);
+}
+
+.milestone-status-dot.active svg {
+    color: white;
+}
+
+.milestone-status-dot.disputed {
+    background: var(--danger-color);
+    border-color: var(--danger-color);
+}
+
+.milestone-status-dot.disputed svg {
+    color: white;
+}
+
+.milestone-line {
+    width: 2px;
+    flex-grow: 1;
+    background: var(--border-color);
+    min-height: 40px;
+}
+
+.milestone-timeline-item:last-child .milestone-line {
+    display: none;
+}
+
+.milestone-content {
+    flex: 1;
+    background: var(--bg-glass);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin-bottom: 16px;
+    transition: all var(--transition-fast);
+}
+
+.milestone-content:hover {
+    border-color: var(--border-hover);
+    box-shadow: var(--shadow-md);
+}
+
+.milestone-content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    gap: 12px;
+}
+
+.milestone-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.milestone-amount {
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.milestone-amount svg {
+    color: var(--primary-color);
+}
+
+.milestone-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+/* ===== Sidebar ===== */
+.project-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.sidebar-card {
+    background: var(--bg-glass);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: 24px;
+}
+
+.sidebar-card-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+}
+
+.sidebar-card-title svg {
+    color: var(--primary-color);
+}
+
+/* ===== Budget Card ===== */
+.budget-display {
+    text-align: center;
+    padding: 20px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-lg);
+}
+
+.budget-display-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.budget-display-value {
+    font-size: 32px;
+    font-weight: 800;
+    font-family: 'Outfit', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.budget-display-value svg {
+    color: var(--primary-color);
+}
+
+.budget-progress {
+    margin-top: 20px;
+}
+
+.budget-progress-bar {
+    height: 8px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.budget-progress-fill {
+    height: 100%;
+    background: var(--gradient-primary);
+    border-radius: var(--radius-full);
+    transition: width var(--transition-slow);
+}
+
+.budget-progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+/* ===== Participants Card ===== */
+.participant-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.participant-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.participant-avatar {
+    width: 44px;
+    height: 44px;
+    background: var(--gradient-primary);
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.participant-avatar svg {
+    width: 22px;
+    height: 22px;
+    color: white;
+}
+
+.participant-info {
+    flex: 1;
+}
+
+.participant-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 14px;
+}
+
+.participant-role {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 1024px) {
+    .project-content {
+        grid-template-columns: 1fr;
+    }
+
+    .project-sidebar {
+        order: -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .project-title-area h1 {
+        font-size: 24px;
+    }
+
+    .project-header-content {
+        flex-direction: column;
+    }
+
+    .project-actions {
+        width: 100%;
+    }
+
+    .project-actions .btn {
+        flex: 1;
+    }
+}
